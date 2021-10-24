@@ -5,10 +5,15 @@ import java.util.Optional;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 
+import com.jordansilva.jscatalog.dto.ProductDTO;
 import com.jordansilva.jscatalog.entities.Product;
 import com.jordansilva.jscatalog.tests.Factory;
 
@@ -68,6 +73,12 @@ public class ProductRepositoryTests {
 	public void findByIdShouldReturnEmptyOptionalWhenIdNotExists() {
 		Optional<Product> result = repository.findById(nonExistingId);
 		Assertions.assertFalse(result.isPresent());
+	}
+	
+	@Test
+	public void findByIdShouldReturnOptionalProductDTOWhenExistId() {
+		Optional<Product> result = repository.findById(existingId);
+		Assertions.assertTrue(result.isPresent());
 	}
 }
 
