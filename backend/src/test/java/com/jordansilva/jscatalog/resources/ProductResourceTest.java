@@ -2,6 +2,8 @@ package com.jordansilva.jscatalog.resources;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
@@ -23,6 +25,7 @@ import org.springframework.test.web.servlet.ResultActions;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jordansilva.jscatalog.dto.ProductDTO;
 import com.jordansilva.jscatalog.services.ProductService;
+import com.jordansilva.jscatalog.services.exceptions.DatabaseException;
 import com.jordansilva.jscatalog.services.exceptions.ResourceNotFoundException;
 import com.jordansilva.jscatalog.tests.Factory;
 
@@ -40,13 +43,15 @@ public class ProductResourceTest {
 
 	private Long existingId;
 	private Long nonExistingId;
+	private Long dependentId;
 	private ProductDTO productDTO;
 	private PageImpl<ProductDTO> page;
 
 	@BeforeEach
 	void setUp() throws Exception {
 		existingId = 1L;
-		nonExistingId = 999L;
+		nonExistingId = 2L;
+		dependentId = 3L;
 
 		productDTO = Factory.createProductDTO();
 		page = new PageImpl<>(List.of(productDTO));
@@ -58,6 +63,10 @@ public class ProductResourceTest {
 
 		when(service.update(eq(existingId), any())).thenReturn(productDTO);
 		when(service.update(eq(nonExistingId), any())).thenThrow(ResourceNotFoundException.class);
+		
+		doNothing().when(service).delete(existingId);
+		doThrow(ResourceNotFoundException.class).when(service).delete(nonExistingId);
+		doThrow(DatabaseException.class).when(service).delete(dependentId);
 	}
 
 	@Test
