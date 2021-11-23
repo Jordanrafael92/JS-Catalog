@@ -21,27 +21,26 @@ import javax.persistence.Table;
 public class Category implements Serializable {
 
 	private static final long serialVersionUID = 1L;
-	
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	private String name;
-	
+
 	@Column(columnDefinition = "TIMESTAMP WITHOUT TIME ZONE")
 	private Instant createdAt;
-	
+
 	@Column(columnDefinition = "TIMESTAMP WITHOUT TIME ZONE")
 	private Instant updatedAt;
-	
+
 	public Instant getCreatedAt() {
 		return createdAt;
 	}
-	
+
 	public Instant getUpdatedAt() {
 		return updatedAt;
 	}
-	
-	@ManyToMany(mappedBy = "categories")
+
 	public Set<Product> getProducts() {
 		return products;
 	}
@@ -50,16 +49,17 @@ public class Category implements Serializable {
 	public void prePersist() {
 		createdAt = Instant.now();
 	}
-	
+
 	@PreUpdate
 	public void preUpdate() {
 		updatedAt = Instant.now();
 	}
-	
+
+	@ManyToMany(mappedBy = "categories")
 	private Set<Product> products = new HashSet<>();
-	
-	public Category () {
-		
+
+	public Category() {
+
 	}
 
 	public Category(Long id, String name) {
@@ -99,5 +99,5 @@ public class Category implements Serializable {
 		Category other = (Category) obj;
 		return Objects.equals(id, other.id);
 	}
-	
+
 }
