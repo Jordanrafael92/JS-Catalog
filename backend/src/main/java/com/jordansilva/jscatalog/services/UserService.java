@@ -9,11 +9,13 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.jordansilva.jscatalog.dto.RoleDTO;
 import com.jordansilva.jscatalog.dto.UserDTO;
+import com.jordansilva.jscatalog.dto.UserInsertDTO;
 import com.jordansilva.jscatalog.entities.Role;
 import com.jordansilva.jscatalog.entities.User;
 import com.jordansilva.jscatalog.repositories.RoleRepository;
@@ -22,8 +24,11 @@ import com.jordansilva.jscatalog.services.exceptions.DatabaseException;
 import com.jordansilva.jscatalog.services.exceptions.ResourceNotFoundException;
 
 @Service
-public class UsertService {
+public class UserService {
 
+	@Autowired
+	private BCryptPasswordEncoder passwordEncoder;
+	
 	@Autowired
 	private UserRepository repository;
 	
@@ -45,9 +50,10 @@ public class UsertService {
 	}
 
 	@Transactional
-	public UserDTO insert(UserDTO dto) {
+	public UserDTO insert(UserInsertDTO dto) {
 		User entity = new User();
 		copyDtoToEntity(dto, entity);
+		entity.setPassword(passwordEncoder.encode(dto.getPassword()));
 		entity = repository.save(entity);
 		return new UserDTO(entity);
 	}
