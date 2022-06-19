@@ -17,7 +17,8 @@ import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.http.MediaType;
@@ -32,7 +33,8 @@ import com.jordansilva.jscatalog.services.exceptions.ResourceNotFoundException;
 import com.jordansilva.jscatalog.tests.Factory;
 import com.jordansilva.jscatalog.tests.TokenUtil;
 
-@WebMvcTest(ProductResource.class)
+@SpringBootTest
+@AutoConfigureMockMvc
 public class ProductResourceTest {
 
 	@Autowired
@@ -69,7 +71,7 @@ public class ProductResourceTest {
 		productDTO = Factory.createProductDTO();
 		page = new PageImpl<>(List.of(productDTO));
 		
-		//when(service.findAllPaged(any(), any(), any())).thenReturn(page);
+		when(service.findAllPaged(any(), any(), any())).thenReturn(page);
 
 		when(service.findById(existingId)).thenReturn(productDTO);
 		when(service.findById(nonExistingId)).thenThrow(ResourceNotFoundException.class);
