@@ -9,10 +9,13 @@
 
 ## Backend
 - Java 11
-- Spring Boot
+- Spring Boot / Spring Security / Spring MVC
 - JPA
 - Maven
 - Mockito
+- JUnit
+- Postman
+- OAuth
 
 ## Frontend
 - ReactJS
