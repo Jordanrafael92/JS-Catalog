@@ -14,6 +14,10 @@
 - Maven
 - Mockito
 
+## Frontend
+- ReactJS
+- HTML / CSS / Bootstrap / JavaScript 
+
 
 ## Author
 Jordan Silva
